@@ -17,34 +17,24 @@ import com.stackoverflow.tests.domain.ResourceFile;
 import com.stackoverflow.tests.domain.ResourceFile_;
 import com.stackoverflow.tests.repository.ResourceFileRepositoryCustom;
 
-public class ResourceFileRepositoryImpl implements
-	ResourceFileRepositoryCustom {
+public class ResourceFileRepositoryImpl implements ResourceFileRepositoryCustom {
     @PersistenceContext
     private EntityManager em;
 
-    /**
-     * Configure the entity manager to be used.
-     * 
-     * @param em
-     *            the {@link EntityManager} to set.
-     */
     public void setEntityManager(EntityManager em) {
 	this.em = em;
     }
 
     @Override
-    public List<ResourceFile> getResourceFile() {
+    public List<ResourceFile> getResourceFilesOrderByFavourites() {
 	CriteriaBuilder criteriaBuilder = this.em.getCriteriaBuilder();
 	CriteriaQuery<ResourceFile> q = criteriaBuilder
 		.createQuery(ResourceFile.class);
 	Root<FavoriteResourceFile> root = q.from(FavoriteResourceFile.class);
 	Join<FavoriteResourceFile, ResourceFile> join = root.join(
 		FavoriteResourceFile_.resourceFile, JoinType.LEFT);
-
 	q.select(join);
 	q.groupBy(join.get(ResourceFile_.id));
-	// q.orderBy(criteriaBuilder.desc(criteriaBuilder.count(root
-	// .get(FavoriteResourceFile_.resourceFile))));
 	q.orderBy(criteriaBuilder.desc(criteriaBuilder.count(join
 		.get(ResourceFile_.id))));
 

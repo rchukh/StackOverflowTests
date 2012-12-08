@@ -25,7 +25,7 @@ public class ResourceFileTest {
     @Test
     public void testMatch() {
 	try {
-	    List<ResourceFile> resources = this.repository.getResourceFile();
+	    List<ResourceFile> resources = this.repository.getResourceFilesOrderByFavourites();
 
 	    System.out.println(resources);
 	} catch (JpaSystemException e) {
